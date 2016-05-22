@@ -30,6 +30,9 @@ val result = animalAges.join(animalLegs)
 val sortedAnimals = animalAges.sortBy(x => x._2, true)
 
 
+//////////////////////////////////////////TASK C
+
+
 //load text file 
 val lines = sc.textFile("File:///home/cloudera/Desktop/lab8/census.txt")
 //split lines by ', '
@@ -40,10 +43,34 @@ split_lines.first()
 val countryOccupation = split_lines.map(record => (record(13), record(6)))
 countryOccupation.saveAsTextFile("File:///home/cloudera/Desktop/lab8/countryOccupation")
 
+//This saves the file as an object file (faster)
+countryOccupation.saveAsObjectFile("<data directory>/countryOccupationBin")
+
+//This function is used to load in the object files
+val loadedCountryOccupation = sc.objectFile[(String,String)]("<data directory>/countryOccupationBin")
+
+
+//These 2 funtions save the text file to the hadoop hdfs and load fron the directory as well
+orig.saveAsTextFile("hdfs://localhost:8020/user/cloudera/primes")
+val nums = sc.textFile("hdfs://localhost:8020/user/cloudera/primes")
 
 
 
 
+
+/////////////////////////////////////////////TASK D
+
+
+
+split_lines.map(x => (x(13), x(0).toInt)).reduceByKey((x, y) => Math.max(x, y)).distinct
+
+split_lines.map(x => (x(13), x(0).toInt)).filter(_._1 != "?").reduceByKey((x, y) => Math.max(x, y)).distinct
+
+split_lines.map(x => (x(13), x(0).toInt)).filter(_._1 != "?").reduceByKey((x, y) => Math.max(x, y)).distinct.sortBy(x => x._2, false).take(7)
+
+
+
+///////////////////////////////////////////////TASK E
 
 
 
